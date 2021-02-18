@@ -2,6 +2,7 @@
 
 #### Запуск:
 ```$ make && make migrate```
+
 Поднимает контейнер PostgreSQL 13 с юзернеймом `username`, паролем `password` и базой `avito-backend` и запускает сервер API на 8888 порту. Оба контейнера работают в сети хоста (`--network host`).
 
 #### Перезапуск сервера API
@@ -12,6 +13,7 @@
 
 #### Миграции
 ``$ make migrate```
+
 Для миграций используется [golang-migrate](https://github.com/golang-migrate/migrate). Миграции хранятся в папке `migrations`.
 
 #### Описание методов
