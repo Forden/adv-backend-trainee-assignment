@@ -1,0 +1,14 @@
+{
+  "port": 8888,
+  "host": "localhost",
+  "used_db": "postgresql",
+  "postgresql": {
+    "port": 5432,
+    "host": "localhost",
+    "username": "username",
+    "password": "password",
+    "db_name": "avito-backend",
+    "ssl_mode": "disable",
+    "ssl_root_cert": ""
+  }
+}

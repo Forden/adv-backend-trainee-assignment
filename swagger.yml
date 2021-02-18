@@ -1,0 +1,195 @@
+openapi: 3.0.0
+info:
+  version: '0.1'
+  title: AdvBackendTraineeAssignment
+servers:
+  - url: 'http://localhost:8888/api/v1/'
+
+paths:
+  /ads:
+    get:
+      tags:
+        - ads
+      summary: "Get all ads"
+      parameters:
+        - name: page
+          in: query
+          description: "Page id"
+          required: true
+          schema:
+            type: integer
+            format: int64
+            default: 1
+        - name: sortBy
+          in: query
+          description: "Sorting parameter"
+          schema:
+            type: string
+            default: "createdAt"
+            enum: [ "price", "createdAt" ]
+        - name: sortDirection
+          in: query
+          description: "Sorting direction"
+          schema:
+            type: string
+            default: "DESC"
+            enum: [ "ASC", "DESC" ]
+        - name: perPage
+          in: query
+          description: "Ads per page"
+          schema:
+            type: integer
+            format: int32
+            default: 10
+            minimum: 1
+            maximum: 100
+      responses:
+        200:
+          description: "ad found"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BasicAd'
+                maxLength: 10
+  /ads/{adID}:
+    get:
+      tags:
+        - ads
+      summary: "Get ad by id"
+      operationId: "getAd"
+      parameters:
+        - name: adID
+          in: path
+          description: "ID of ad to return"
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: fields
+          in: query
+          description: "Additional fields will be added to response"
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - description
+                - photoLinks
+      responses:
+        200:
+          description: "ad found"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/BasicAd'
+                  - $ref: '#/components/schemas/ExtendedAd'
+        404:
+          description: "ad not found"
+  /ad:
+    post:
+      tags:
+        - ads
+      summary: "Create new ad"
+      operationId: "newAd"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/CreatingAd'
+        required: true
+      responses:
+        200:
+          description: "Ad created"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedAd'
+        400:
+          description: "Not enough data"
+
+
+
+
+components:
+  schemas:
+    CreatingAd:
+      type: object
+      required:
+        - title
+        - description
+        - price
+        - photoLinks
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        price:
+          type: integer
+          format: int64
+        description:
+          type: string
+          maxLength: 1000
+        photoLinks:
+          type: array
+          items:
+            type: string
+            format: uri
+          maxLength: 3
+    CreatedAd:
+      type: object
+      required:
+        - ad_id
+      properties:
+        ad_id:
+          type: string
+          format: uuid
+    BasicAd:
+      type: object
+      required:
+        - ad_id
+        - title
+        - price
+        - mainPhotoLink
+      properties:
+        ad_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          maxLength: 200
+        price:
+          type: integer
+          format: int64
+        mainPhotoLink:
+          type: string
+          format: uri
+    ExtendedAd:
+      type: object
+      required:
+        - title
+        - price
+        - mainPhotoLink
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        price:
+          type: integer
+          format: int64
+        mainPhotoLink:
+          type: string
+          format: uri
+        description:
+          type: string
+          maxLength: 1000
+        photoLinks:
+          type: array
+          items:
+            type: string
+            format: uri
+          maxLength: 3
