@@ -12,7 +12,8 @@
 ```$ make clean```
 
 #### Миграции
-``$ make migrate```
+```$ make migrate```
+
 Для миграций используется [golang-migrate](https://github.com/golang-migrate/migrate). Миграции хранятся в папке `migrations`.
 
 #### Описание методов
